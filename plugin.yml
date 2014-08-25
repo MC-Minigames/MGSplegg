@@ -1,0 +1,12 @@
+name: MGSplegg
+main: com.comze_instancelabs.mgsplegg.Main
+version: 1.0.0
+author: InstanceLabs
+softdepend: [Vault, MinigamesLib]
+depend: [MinigamesLib]
+loadbefore: [MinigamesLib]
+commands:
+   sp:
+      description: Main command
+      usage: /sp [action]
+      aliases: [splegg, mgsplegg]
