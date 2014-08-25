@@ -86,14 +86,14 @@ public class Main extends JavaPlugin implements Listener {
 
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		ic.handleArgs(this, "mgsplegg", "/" + cmd.getName(), sender, args);
-		if (args.length > 0) {
+		/*if (args.length > 0) {
 			if (args[0].equalsIgnoreCase("setarea")) {
 				if (sender instanceof Player) {
 					Player p = (Player) sender;
 					ic.setAreaPoint(pli, sender, args, "mgsplegg", "/" + cmd.getName(), args[0], this, p);
 				}
 			}
-		}
+		}*/
 		return true;
 	}
 

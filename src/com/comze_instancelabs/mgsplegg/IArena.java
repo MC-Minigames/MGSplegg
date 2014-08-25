@@ -9,6 +9,7 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitTask;
 
 import com.comze_instancelabs.minigamesapi.Arena;
+import com.comze_instancelabs.minigamesapi.ArenaType;
 import com.comze_instancelabs.minigamesapi.MinigamesAPI;
 import com.comze_instancelabs.minigamesapi.PluginInstance;
 import com.comze_instancelabs.minigamesapi.util.Util;
@@ -19,21 +20,16 @@ public class IArena extends Arena {
 	private BukkitTask timer;
 	private BukkitTask starttimer;
 	Main m = null;
-	public int c = 30;
 	BukkitTask tt;
 	int currentingamecount;
 
 	public IArena(Main m, String arena) {
-		super(m, arena);
+		super(m, arena, ArenaType.REGENERATION);
 		this.m = m;
-		MinigamesAPI.getAPI().pinstances.get(m).getArenaListener().loseY = 10;
+		MinigamesAPI.getAPI().pinstances.get(m).getArenaListener().loseY = 20;
 	}
 
-	public void setRadius(int i) {
-		this.c = i;
-	}
-
-	public void generateArena() {
+	/*public void generateArena() {
 
 		Location start = Util.getComponentForArena(m, this.getName(), "area.point0");
 		Location end = Util.getComponentForArena(m, this.getName(), "area.point1");
@@ -55,7 +51,7 @@ public class IArena extends Arena {
 			}
 		}
 
-	}
+	}*/
 
 	@Override
 	public void start(boolean tp) {
@@ -75,7 +71,7 @@ public class IArena extends Arena {
 		}, 20L);
 	}
 
-	@Override
+	/*@Override
 	public void stop() {
 		super.stop();
 		reset();
@@ -85,6 +81,6 @@ public class IArena extends Arena {
 	public void reset() {
 		// TODO test
 		generateArena();
-	}
+	}*/
 
 }
