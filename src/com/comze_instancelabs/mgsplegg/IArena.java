@@ -75,12 +75,12 @@ public class IArena extends Arena {
 	public void stop() {
 		super.stop();
 		reset();
-	}
+	}*/
 
 	@Override
 	public void reset() {
 		// TODO test
-		generateArena();
-	}*/
+		Util.loadArenaFromFileSYNC(m, this);
+	}
 
 }

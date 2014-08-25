@@ -52,15 +52,23 @@ public class Main extends JavaPlugin implements Listener {
 
 	ICommandHandler ic;
 
+	boolean allow_snowball_knockback = true;
+
 	public void onEnable() {
 		m = this;
 		api = MinigamesAPI.getAPI().setupAPI(this, "splegg", IArena.class, new ArenasConfig(this), new MessagesConfig(this), new IClassesConfig(this), new StatsConfig(this, false), new DefaultConfig(this, false), false);
 		PluginInstance pinstance = api.pinstances.get(this);
 		pinstance.addLoadedArenas(loadArenas(this, pinstance.getArenasConfig()));
 		Bukkit.getPluginManager().registerEvents(this, this);
-		pinstance.arenaSetup = new ArenaSetup();
+		pinstance.arenaSetup = new IArenaSetup();
 		pli = pinstance;
 		ic = new ICommandHandler();
+
+		this.getConfig().addDefault("config.allow_snowball_knockback", true);
+		this.getConfig().options().copyDefaults(true);
+		this.saveConfig();
+
+		allow_snowball_knockback = getConfig().getBoolean("config.allow_snowball_knockback");
 	}
 
 	public static ArrayList<Arena> loadArenas(JavaPlugin plugin, ArenasConfig cf) {
@@ -115,6 +123,10 @@ public class Main extends JavaPlugin implements Listener {
 						p.setHealth(20D);
 						event.setCancelled(true);
 						return;
+					} else if (event.getCause() == DamageCause.PROJECTILE) {
+						if (!this.allow_snowball_knockback) {
+							event.setCancelled(true);
+						}
 					}
 				}
 			}
