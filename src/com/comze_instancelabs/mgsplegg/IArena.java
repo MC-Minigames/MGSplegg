@@ -1,17 +1,18 @@
 package com.comze_instancelabs.mgsplegg;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitTask;
 
 import com.comze_instancelabs.minigamesapi.Arena;
-import com.comze_instancelabs.minigamesapi.ArenaType;
 import com.comze_instancelabs.minigamesapi.MinigamesAPI;
+import com.comze_instancelabs.minigamesapi.PluginInstance;
 import com.comze_instancelabs.minigamesapi.util.Util;
+import com.comze_instancelabs.minigamesapi.util.Validator;
 
 public class IArena extends Arena {
 
@@ -55,9 +56,27 @@ public class IArena extends Arena {
 		}
 
 	}
-	
+
 	@Override
-	public void stop(){
+	public void start(boolean tp) {
+		super.start(tp);
+		final IArena a = this;
+		Bukkit.getScheduler().runTaskLater(m, new Runnable() {
+			public void run() {
+				for (String p_ : a.getAllPlayers()) {
+					if (Validator.isPlayerOnline(p_)) {
+						Player p = Bukkit.getPlayer(p_);
+						p.setWalkSpeed(0.2F);
+						p.setFoodLevel(20);
+						p.removePotionEffect(PotionEffectType.JUMP);
+					}
+				}
+			}
+		}, 20L);
+	}
+
+	@Override
+	public void stop() {
 		super.stop();
 		reset();
 	}
