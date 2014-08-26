@@ -1,32 +1,26 @@
 package com.comze_instancelabs.mgsplegg;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Egg;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Snowball;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.ProjectileHitEvent;
-import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerEggThrowEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.BlockIterator;
@@ -36,7 +30,6 @@ import com.comze_instancelabs.minigamesapi.ArenaSetup;
 import com.comze_instancelabs.minigamesapi.ArenaState;
 import com.comze_instancelabs.minigamesapi.MinigamesAPI;
 import com.comze_instancelabs.minigamesapi.PluginInstance;
-import com.comze_instancelabs.minigamesapi.commands.CommandHandler;
 import com.comze_instancelabs.minigamesapi.config.ArenasConfig;
 import com.comze_instancelabs.minigamesapi.config.DefaultConfig;
 import com.comze_instancelabs.minigamesapi.config.MessagesConfig;
@@ -94,14 +87,10 @@ public class Main extends JavaPlugin implements Listener {
 
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		ic.handleArgs(this, "mgsplegg", "/" + cmd.getName(), sender, args);
-		/*if (args.length > 0) {
-			if (args[0].equalsIgnoreCase("setarea")) {
-				if (sender instanceof Player) {
-					Player p = (Player) sender;
-					ic.setAreaPoint(pli, sender, args, "mgsplegg", "/" + cmd.getName(), args[0], this, p);
-				}
-			}
-		}*/
+		/*
+		 * if (args.length > 0) { if (args[0].equalsIgnoreCase("setarea")) { if (sender instanceof Player) { Player p = (Player) sender;
+		 * ic.setAreaPoint(pli, sender, args, "mgsplegg", "/" + cmd.getName(), args[0], this, p); } } }
+		 */
 		return true;
 	}
 
@@ -127,6 +116,8 @@ public class Main extends JavaPlugin implements Listener {
 						if (!this.allow_snowball_knockback) {
 							event.setCancelled(true);
 						}
+					} else if (event.getCause() == DamageCause.FALL) {
+						event.setCancelled(true);
 					}
 				}
 			}
@@ -150,7 +141,7 @@ public class Main extends JavaPlugin implements Listener {
 
 	@EventHandler
 	public void onProjectileLand(ProjectileHitEvent event) {
-		if (event.getEntity() instanceof Snowball) {
+		if (event.getEntity() instanceof Snowball || event.getEntity() instanceof Egg || event.getEntity() instanceof Arrow) {
 			Player player = (Player) event.getEntity().getShooter();
 			if (pli.global_players.containsKey(player.getName())) {
 				BlockIterator bi = new BlockIterator(event.getEntity().getWorld(), event.getEntity().getLocation().toVector(), event.getEntity().getVelocity().normalize(), 0.0D, 4);
@@ -180,5 +171,4 @@ public class Main extends JavaPlugin implements Listener {
 			}
 		}
 	}
-
 }
