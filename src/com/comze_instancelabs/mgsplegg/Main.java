@@ -142,26 +142,29 @@ public class Main extends JavaPlugin implements Listener {
 	@EventHandler
 	public void onProjectileLand(ProjectileHitEvent event) {
 		if (event.getEntity() instanceof Snowball || event.getEntity() instanceof Egg || event.getEntity() instanceof Arrow) {
-			Player player = (Player) event.getEntity().getShooter();
-			if (pli.global_players.containsKey(player.getName())) {
-				IArena a = (IArena) pli.global_players.get(player.getName());
-				BlockIterator bi = new BlockIterator(event.getEntity().getWorld(), event.getEntity().getLocation().toVector(), event.getEntity().getVelocity().normalize(), 0.0D, 4);
-				Block hit = null;
-				while (bi.hasNext()) {
-					hit = bi.next();
-					if (hit.getTypeId() != 0) {
-						break;
-					}
-				}
-				if (hit != null) {
-					// TODO if in bounds
-					try {
-						if (a.getBoundaries().containsLocWithoutY(hit.getLocation())) {
-							hit.setTypeId(0);
-							player.playSound(player.getLocation(), Sound.CHICKEN_EGG_POP, 1F, 1F);
+			if (event.getEntity().getShooter() instanceof Player) {
+				Player player = (Player) event.getEntity().getShooter();
+				if (player != null) {
+					if (pli.global_players.containsKey(player.getName())) {
+						IArena a = (IArena) pli.global_players.get(player.getName());
+						BlockIterator bi = new BlockIterator(event.getEntity().getWorld(), event.getEntity().getLocation().toVector(), event.getEntity().getVelocity().normalize(), 0.0D, 4);
+						Block hit = null;
+						while (bi.hasNext()) {
+							hit = bi.next();
+							if (hit.getTypeId() != 0) {
+								break;
+							}
 						}
-					} catch (Exception e) {
-						System.out.println(e.getMessage() + " Please update your MinigamesLib to 1.5!");
+						if (hit != null) {
+							try {
+								if (a.getBoundaries().containsLocWithoutY(hit.getLocation())) {
+									hit.setTypeId(0);
+									player.playSound(player.getLocation(), Sound.CHICKEN_EGG_POP, 1F, 1F);
+								}
+							} catch (Exception e) {
+								System.out.println(e.getMessage() + " Please update your MinigamesLib to 1.5!");
+							}
+						}
 					}
 				}
 			}
