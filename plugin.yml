@@ -9,4 +9,4 @@ commands:
    sp:
       description: Main command
       usage: /sp [action]
-      aliases: [splegg, mgsplegg]
+      aliases: [splegg, mgsplegg, spl]
