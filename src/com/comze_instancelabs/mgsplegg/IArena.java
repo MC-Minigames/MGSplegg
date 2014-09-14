@@ -110,12 +110,6 @@ public class IArena extends Arena {
 	}
 
 	@Override
-	public void reset() {
-		// TODO test
-		Util.loadArenaFromFileSYNC(m, this);
-	}
-
-	@Override
 	public void stop() {
 		if (powerup_task != null) {
 			powerup_task.cancel();

@@ -139,6 +139,7 @@ public class Main extends JavaPlugin implements Listener {
 				event.getPlayer().updateInventory();
 				event.setCancelled(true);
 				event.getBlock().setType(Material.AIR);
+				a.getSmartReset().addChanged(event.getBlock(), event.getBlock().getType().equals(Material.CHEST));
 			} else {
 				event.setCancelled(true);
 			}
@@ -163,6 +164,7 @@ public class Main extends JavaPlugin implements Listener {
 						}
 						if (hit != null) {
 							try {
+								a.getSmartReset().addChanged(hit.getLocation().getBlock(), hit.getLocation().getBlock().getType().equals(Material.CHEST));
 								if (a.getBoundaries().containsLocWithoutY(hit.getLocation())) {
 									hit.setTypeId(0);
 									player.playSound(player.getLocation(), Sound.CHICKEN_EGG_POP, 1F, 1F);
