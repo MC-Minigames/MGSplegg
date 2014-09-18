@@ -17,12 +17,14 @@ import org.bukkit.entity.Player;
 import org.bukkit.entity.Snowball;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.player.PlayerEggThrowEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -64,6 +66,7 @@ public class Main extends JavaPlugin implements Listener {
 
 		this.getConfig().addDefault("config.allow_snowball_knockback", true);
 		this.getConfig().addDefault("config.powerup_spawn_percentage", 10);
+		this.getConfig().addDefault("config.shoot_with_shovels", true);
 		this.getConfig().options().copyDefaults(true);
 		this.saveConfig();
 
@@ -206,6 +209,21 @@ public class Main extends JavaPlugin implements Listener {
 				for (Entity e : p.getNearbyEntities(3D, 3D, 3D)) {
 					if (e instanceof Chicken) {
 						e.remove();
+					}
+				}
+			}
+		}
+	}
+
+	@EventHandler
+	public void onRightclick(PlayerInteractEvent event) {
+		if (event.hasItem()) {
+			if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+				if (pli.global_players.containsKey(event.getPlayer().getName())) {
+					if (this.getConfig().getBoolean("config.shoot_with_shovels")) {
+						if (event.getItem().getType() == Material.DIAMOND_SPADE || event.getItem().getType() == Material.IRON_SPADE || event.getItem().getType() == Material.GOLD_SPADE || event.getItem().getType() == Material.STONE_SPADE || event.getItem().getType() == Material.WOOD_SPADE) {
+							event.getPlayer().launchProjectile(Snowball.class);
+						}
 					}
 				}
 			}
