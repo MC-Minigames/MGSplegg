@@ -23,6 +23,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.ProjectileHitEvent;
+import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerEggThrowEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
@@ -135,7 +136,7 @@ public class Main extends JavaPlugin implements Listener {
 
 	@EventHandler
 	public void onBreak(BlockBreakEvent event) {
-		if (pli.global_players.containsKey(event.getPlayer().getName())) {
+		if (pli.global_players.containsKey(event.getPlayer().getName()) && !pli.global_lost.containsKey(event.getPlayer().getName())) {
 			IArena a = (IArena) pli.global_players.get(event.getPlayer().getName());
 			if (a.getArenaState() == ArenaState.INGAME) {
 				event.getPlayer().getInventory().addItem(new ItemStack(Material.SNOW_BALL));
@@ -155,7 +156,7 @@ public class Main extends JavaPlugin implements Listener {
 			if (event.getEntity().getShooter() instanceof Player) {
 				Player player = (Player) event.getEntity().getShooter();
 				if (player != null) {
-					if (pli.global_players.containsKey(player.getName())) {
+					if (pli.global_players.containsKey(player.getName()) && !pli.global_lost.containsKey(player.getName())) {
 						IArena a = (IArena) pli.global_players.get(player.getName());
 						BlockIterator bi = new BlockIterator(event.getEntity().getWorld(), event.getEntity().getLocation().toVector(), event.getEntity().getVelocity().normalize(), 0.0D, 4);
 						Block hit = null;
