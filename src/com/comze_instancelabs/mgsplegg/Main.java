@@ -68,6 +68,7 @@ public class Main extends JavaPlugin implements Listener {
 		this.getConfig().addDefault("config.allow_snowball_knockback", true);
 		this.getConfig().addDefault("config.powerup_spawn_percentage", 10);
 		this.getConfig().addDefault("config.shoot_with_shovels", true);
+		this.getConfig().addDefault("config.shoot_eggs_instead_of_snowballs", true);
 		this.getConfig().options().copyDefaults(true);
 		this.saveConfig();
 
@@ -226,7 +227,11 @@ public class Main extends JavaPlugin implements Listener {
 				if (pli.global_players.containsKey(event.getPlayer().getName())) {
 					if (this.getConfig().getBoolean("config.shoot_with_shovels")) {
 						if (event.getItem().getType() == Material.DIAMOND_SPADE || event.getItem().getType() == Material.IRON_SPADE || event.getItem().getType() == Material.GOLD_SPADE || event.getItem().getType() == Material.STONE_SPADE || event.getItem().getType() == Material.WOOD_SPADE) {
-							event.getPlayer().launchProjectile(Snowball.class);
+							if (this.getConfig().getBoolean("config.shoot_eggs_instead_of_snowballs")) {
+								event.getPlayer().launchProjectile(Egg.class);
+							} else {
+								event.getPlayer().launchProjectile(Snowball.class);
+							}
 						}
 					}
 				}
