@@ -19,6 +19,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
@@ -151,6 +152,13 @@ public class Main extends JavaPlugin implements Listener {
 			} else {
 				event.setCancelled(true);
 			}
+		}
+	}
+
+	@EventHandler
+	public void onPlace(BlockPlaceEvent event) {
+		if (pli.global_players.containsKey(event.getPlayer().getName())) {
+			event.setCancelled(true);
 		}
 	}
 
