@@ -70,8 +70,15 @@ public class Main extends JavaPlugin implements Listener {
 		this.getConfig().addDefault("config.powerup_spawn_percentage", 10);
 		this.getConfig().addDefault("config.shoot_with_shovels", true);
 		this.getConfig().addDefault("config.shoot_eggs_instead_of_snowballs", true);
+		this.getConfig().addDefault("config.die_below_bedrock_level", false);
+
 		this.getConfig().options().copyDefaults(true);
 		this.saveConfig();
+
+		boolean die_below_zero = this.getConfig().getBoolean("config.die_below_bedrock_level");
+		if (die_below_zero) {
+			pli.getArenaListener().loseY = 100;
+		}
 
 		allow_snowball_knockback = getConfig().getBoolean("config.allow_snowball_knockback");
 	}
