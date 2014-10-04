@@ -55,6 +55,7 @@ public class Main extends JavaPlugin implements Listener {
 	ICommandHandler ic;
 
 	boolean allow_snowball_knockback = true;
+	boolean give_snowballs_when_breaking_blocks = true;
 
 	public void onEnable() {
 		m = this;
@@ -71,6 +72,7 @@ public class Main extends JavaPlugin implements Listener {
 		this.getConfig().addDefault("config.shoot_with_shovels", true);
 		this.getConfig().addDefault("config.shoot_eggs_instead_of_snowballs", true);
 		this.getConfig().addDefault("config.die_below_bedrock_level", false);
+		this.getConfig().addDefault("config.give_snowballs_when_breaking_blocks", true);
 
 		this.getConfig().options().copyDefaults(true);
 		this.saveConfig();
@@ -81,6 +83,7 @@ public class Main extends JavaPlugin implements Listener {
 		}
 
 		allow_snowball_knockback = getConfig().getBoolean("config.allow_snowball_knockback");
+		give_snowballs_when_breaking_blocks = getConfig().getBoolean("config.give_snowballs_when_breaking_blocks");
 	}
 
 	public static ArrayList<Arena> loadArenas(JavaPlugin plugin, ArenasConfig cf) {
@@ -151,8 +154,10 @@ public class Main extends JavaPlugin implements Listener {
 		if (pli.global_players.containsKey(event.getPlayer().getName()) && !pli.global_lost.containsKey(event.getPlayer().getName())) {
 			IArena a = (IArena) pli.global_players.get(event.getPlayer().getName());
 			if (a.getArenaState() == ArenaState.INGAME) {
-				event.getPlayer().getInventory().addItem(new ItemStack(Material.SNOW_BALL));
-				event.getPlayer().updateInventory();
+				if (give_snowballs_when_breaking_blocks) {
+					event.getPlayer().getInventory().addItem(new ItemStack(Material.SNOW_BALL));
+					event.getPlayer().updateInventory();
+				}
 				event.setCancelled(true);
 				event.getBlock().setType(Material.AIR);
 				a.getSmartReset().addChanged(event.getBlock(), event.getBlock().getType().equals(Material.CHEST));
