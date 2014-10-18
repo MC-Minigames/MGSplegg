@@ -1,9 +1,9 @@
 package com.comze_instancelabs.mgsplegg;
 
+import java.util.ArrayList;
+
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.block.Block;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -15,7 +15,6 @@ import com.comze_instancelabs.minigamesapi.Arena;
 import com.comze_instancelabs.minigamesapi.ArenaState;
 import com.comze_instancelabs.minigamesapi.ArenaType;
 import com.comze_instancelabs.minigamesapi.MinigamesAPI;
-import com.comze_instancelabs.minigamesapi.PluginInstance;
 import com.comze_instancelabs.minigamesapi.util.Util;
 import com.comze_instancelabs.minigamesapi.util.Validator;
 
@@ -33,6 +32,8 @@ public class IArena extends Arena {
 		this.m = m;
 		MinigamesAPI.getAPI().pinstances.get(m).getArenaListener().loseY = 20;
 	}
+
+	ArrayList<String> pp = new ArrayList<String>();
 
 	@Override
 	public void start(boolean tp) {
@@ -100,6 +101,21 @@ public class IArena extends Arena {
 				}
 			}
 		}, 60, 60);
+
+		tt = Bukkit.getScheduler().runTaskTimer(m, new Runnable() {
+			public void run() {
+				for (String p_ : a.getAllPlayers()) {
+					if (!pp.contains(p_)) {
+						Player p = Bukkit.getPlayer(p_);
+						if (p != null) {
+							p.setFoodLevel(p.getFoodLevel() > 5 ? p.getFoodLevel() - 5 : 3);
+						}
+					} else {
+						pp.remove(p_);
+					}
+				}
+			}
+		}, 20L * 4, 20L * 4);
 	}
 
 	public ItemStack getItemStack() {
@@ -127,6 +143,9 @@ public class IArena extends Arena {
 	public void stop() {
 		if (powerup_task != null) {
 			powerup_task.cancel();
+		}
+		if (tt != null) {
+			tt.cancel();
 		}
 		super.stop();
 	}

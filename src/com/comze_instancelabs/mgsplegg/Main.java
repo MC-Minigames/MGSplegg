@@ -72,6 +72,7 @@ public class Main extends JavaPlugin implements Listener {
 		this.getConfig().addDefault("config.shoot_with_shovels", true);
 		this.getConfig().addDefault("config.shoot_eggs_instead_of_snowballs", true);
 		this.getConfig().addDefault("config.die_below_bedrock_level", false);
+		this.getConfig().addDefault("config.hunger_when_not_breaking_blocks", false);
 		this.getConfig().addDefault("config.give_snowballs_when_breaking_blocks", true);
 
 		this.getConfig().options().copyDefaults(true);
@@ -157,6 +158,10 @@ public class Main extends JavaPlugin implements Listener {
 				if (give_snowballs_when_breaking_blocks) {
 					event.getPlayer().getInventory().addItem(new ItemStack(Material.SNOW_BALL));
 					event.getPlayer().updateInventory();
+				}
+				if(!a.pp.contains(event.getPlayer().getName())){
+					a.pp.add(event.getPlayer().getName());
+					event.getPlayer().setFoodLevel(20);
 				}
 				event.setCancelled(true);
 				event.getBlock().setType(Material.AIR);
