@@ -56,6 +56,9 @@ public class Main extends JavaPlugin implements Listener {
 
 	boolean allow_snowball_knockback = true;
 	boolean give_snowballs_when_breaking_blocks = true;
+	boolean whitelist = true;
+
+	ArrayList<Integer> whitelist_ids = new ArrayList<Integer>();
 
 	public void onEnable() {
 		m = this;
@@ -74,6 +77,8 @@ public class Main extends JavaPlugin implements Listener {
 		this.getConfig().addDefault("config.die_below_bedrock_level", false);
 		this.getConfig().addDefault("config.hunger_when_not_breaking_blocks", false);
 		this.getConfig().addDefault("config.give_snowballs_when_breaking_blocks", true);
+		this.getConfig().addDefault("config.whitelist.enabled", false);
+		this.getConfig().addDefault("config.whitelist.ids", "1;5;35");
 
 		this.getConfig().options().copyDefaults(true);
 		this.saveConfig();
@@ -85,6 +90,13 @@ public class Main extends JavaPlugin implements Listener {
 
 		allow_snowball_knockback = getConfig().getBoolean("config.allow_snowball_knockback");
 		give_snowballs_when_breaking_blocks = getConfig().getBoolean("config.give_snowballs_when_breaking_blocks");
+		whitelist = getConfig().getBoolean("config.whitelist.enabled");
+
+		for (String str : this.getConfig().getString("config.whitelist.ids").split(";")) {
+			if (Util.isNumeric(str)) {
+				whitelist_ids.add(Integer.parseInt(str));
+			}
+		}
 	}
 
 	public static ArrayList<Arena> loadArenas(JavaPlugin plugin, ArenasConfig cf) {
@@ -155,11 +167,17 @@ public class Main extends JavaPlugin implements Listener {
 		if (pli.global_players.containsKey(event.getPlayer().getName()) && !pli.global_lost.containsKey(event.getPlayer().getName())) {
 			IArena a = (IArena) pli.global_players.get(event.getPlayer().getName());
 			if (a.getArenaState() == ArenaState.INGAME) {
+				if (whitelist) {
+					if (whitelist_ids.contains(event.getBlock().getTypeId())) {
+						event.setCancelled(true);
+						return;
+					}
+				}
 				if (give_snowballs_when_breaking_blocks) {
 					event.getPlayer().getInventory().addItem(new ItemStack(Material.SNOW_BALL));
 					event.getPlayer().updateInventory();
 				}
-				if(!a.pp.contains(event.getPlayer().getName())){
+				if (!a.pp.contains(event.getPlayer().getName())) {
 					a.pp.add(event.getPlayer().getName());
 					event.getPlayer().setFoodLevel(20);
 				}
@@ -196,6 +214,11 @@ public class Main extends JavaPlugin implements Listener {
 							}
 						}
 						if (hit != null) {
+							if (whitelist) {
+								if (whitelist_ids.contains(hit.getTypeId())) {
+									return;
+								}
+							}
 							try {
 								a.getSmartReset().addChanged(hit.getLocation().getBlock(), hit.getLocation().getBlock().getType().equals(Material.CHEST));
 								if (a.getBoundaries().containsLocWithoutY(hit.getLocation())) {
