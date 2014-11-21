@@ -102,20 +102,22 @@ public class IArena extends Arena {
 			}
 		}, 60, 60);
 
-		tt = Bukkit.getScheduler().runTaskTimer(m, new Runnable() {
-			public void run() {
-				for (String p_ : a.getAllPlayers()) {
-					if (!pp.contains(p_)) {
-						Player p = Bukkit.getPlayer(p_);
-						if (p != null) {
-							p.setFoodLevel(p.getFoodLevel() > 5 ? p.getFoodLevel() - 5 : 3);
+		if (m.getConfig().getBoolean("config.hunger_when_not_breaking_blocks")) {
+			tt = Bukkit.getScheduler().runTaskTimer(m, new Runnable() {
+				public void run() {
+					for (String p_ : a.getAllPlayers()) {
+						if (!pp.contains(p_)) {
+							Player p = Bukkit.getPlayer(p_);
+							if (p != null) {
+								p.setFoodLevel(p.getFoodLevel() > 5 ? p.getFoodLevel() - 5 : 3);
+							}
+						} else {
+							pp.remove(p_);
 						}
-					} else {
-						pp.remove(p_);
 					}
 				}
-			}
-		}, 20L * 4, 20L * 4);
+			}, 20L * 4, 20L * 4);
+		}
 	}
 
 	public ItemStack getItemStack() {

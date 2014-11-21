@@ -23,6 +23,7 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
+import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerEggThrowEvent;
@@ -181,9 +182,8 @@ public class Main extends JavaPlugin implements Listener {
 					a.pp.add(event.getPlayer().getName());
 					event.getPlayer().setFoodLevel(20);
 				}
-				event.setCancelled(true);
-				event.getBlock().setType(Material.AIR);
 				a.getSmartReset().addChanged(event.getBlock(), event.getBlock().getType().equals(Material.CHEST));
+				event.getBlock().setType(Material.AIR);
 			} else {
 				event.setCancelled(true);
 			}
@@ -247,7 +247,7 @@ public class Main extends JavaPlugin implements Listener {
 	}
 
 	@EventHandler
-	public void onPlayerPicupItem(PlayerPickupItemEvent event) {
+	public void onPlayerPickupItem(PlayerPickupItemEvent event) {
 		Player p = event.getPlayer();
 		if (pli.global_players.containsKey(p.getName())) {
 			IArena a = (IArena) pli.global_players.get(p.getName());
